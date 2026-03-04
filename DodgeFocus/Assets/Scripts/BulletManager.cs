@@ -32,12 +32,15 @@ public class BulletManager : MonoBehaviour
 
     IEnumerator Spawn()
     {
-        WaitForSeconds w = new WaitForSeconds(5f);
+        WaitForSeconds w = new WaitForSeconds(10f);
 
         while (true)
         {
-            Bullet b = _pool[0].Get();
-            b.Init(transform.position, 10f, 0f, 0f, true, 3, new Vector2(1, 1).normalized);
+            for (int i = 0; i < 12; ++i)
+            {
+                Bullet b = _pool[0].Get();
+                b.Init(transform.position, 6f, 0f, 0f, true, 3, 45 + (i * 30));
+            }
 
             yield return w;
         }

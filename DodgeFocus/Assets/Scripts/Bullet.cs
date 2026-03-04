@@ -3,6 +3,8 @@ using UnityEngine.Pool;
 
 public class Bullet : MonoBehaviour
 {
+    private bool _isInitialized = false;
+
     public float Velocity { get; private set; }
     public float Acceleration { get; private set; }
     public float AngularVelocity { get; private set; }
@@ -14,7 +16,7 @@ public class Bullet : MonoBehaviour
     IBulletSteering _steering;
     ObjectPool<Bullet> _pool;
 
-    public void Init(Vector3 position, float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, Vector2 direction)
+    public void Init(Vector3 position, float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, float degree)
     {
         transform.position = position;
 
@@ -33,12 +35,17 @@ public class Bullet : MonoBehaviour
         }
 
         ReflectCnt = 0;
-        Dir = direction;
+
+        float rad = degree * Mathf.Deg2Rad;
+        Dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+        Dir = Dir.normalized;
 
         _steering = new ConstantSteering();
+
+        _isInitialized = true;
     }
 
-    public void Init(Vector3 position, float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, Vector2 direction, IBulletSteering steering)
+    public void Init(Vector3 position, float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, float degree, IBulletSteering steering)
     {
         transform.position = position;
 
@@ -57,9 +64,14 @@ public class Bullet : MonoBehaviour
         }
 
         ReflectCnt = 0;
-        Dir = direction;
+
+        float rad = degree * Mathf.Deg2Rad;
+        Dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+        Dir = Dir.normalized;
 
         _steering = steering;
+
+        _isInitialized = true;
     }
 
     public void SetManagedPool(ObjectPool<Bullet> pool)
@@ -75,11 +87,21 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_isInitialized == false)
+        {
+            return;
+        }
+
         float dt = Time.deltaTime;
 
         Dir = _steering.GetNextDirection(Dir, this);
         Velocity = Velocity + Acceleration * dt;
         transform.position += (Vector3)(Dir * Velocity * dt);
+    }
+
+    private void OnDisable()
+    {
+        _isInitialized = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -105,6 +127,10 @@ public class Bullet : MonoBehaviour
             ReflectCnt++;
 
             Debug.Log($"ReflectCnt : {ReflectCnt}");
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Border"))
+        {
+            _pool.Release(this);
         }
     }
 
