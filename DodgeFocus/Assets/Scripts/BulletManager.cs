@@ -1,27 +1,19 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class BulletManager : MonoBehaviour
 {
-    [SerializeField] private GameObject[] prefab; // Todo : 배열(4개)로 관리
+    [SerializeField] private GameObject[] _prefabs; // Todo : 배열(4개)로 관리
 
-    private ObjectPool<Bullet>[] _pool; // Todo : 배열(4개)로 관리
+    private BulletPool[] _pool; // Todo : 배열(4개)로 관리
 
     private void Awake()
     {
-        _pool = new ObjectPool<Bullet>[prefab.Length];
+        _pool = new BulletPool[_prefabs.Length];
 
-        for (int i = 0; i < prefab.Length; ++i)
+        for (int i = 0; i < _prefabs.Length; ++i)
         {
-            int index = i;
-            _pool[index] = new ObjectPool<Bullet>(
-                () => CreateBullet(index),
-                OnGetBullet,
-                OnReleaseBullet,
-                OnDestroyBullet,
-                false, 100
-            );
+            _pool[i] = new BulletPool(_prefabs[i]);
         }
     }
 
@@ -32,39 +24,37 @@ public class BulletManager : MonoBehaviour
 
     IEnumerator Spawn()
     {
-        WaitForSeconds w = new WaitForSeconds(10f);
-
+        WaitForSeconds w7 = new WaitForSeconds(7f);
+        WaitForSeconds w05 = new WaitForSeconds(0.5f);
         while (true)
         {
-            for (int i = 0; i < 12; ++i)
+
+            //for (int cnt = 0; cnt < 3; ++cnt)
             {
-                Bullet b = _pool[0].Get();
-                b.Init(transform.position, 6f, 0f, 0f, true, 3, 45 + (i * 30));
+                for (int i = 0; i < 24; ++i)
+                {
+                    Bullet b = _pool[0].Get();
+                    b.Init(transform.position, 6f, 0f, 0f, false, 0, 45 + (i * 15));
+                }
+
+                yield return w05;
+
+                for (int i = 0; i < 24; ++i)
+                {
+                    Bullet b = _pool[1].Get();
+                    b.Init(transform.position, 6f, 0f, 0f, true, 3, 45 + (i * 15));
+                }
+
+                yield return w05;
+
+                for (int i = 0; i < 24; ++i)
+                {
+                    Bullet b = _pool[0].Get();
+                    b.Init(transform.position, 6f, 0f, 0f, false, 0, 45 + (i * 15));
+                }
             }
 
-            yield return w;
+            yield return w7;
         }
-    }
-
-    private Bullet CreateBullet(int index)
-    {
-        Bullet bullet = Instantiate(prefab[index]).GetComponent<Bullet>();
-        bullet.SetManagedPool(_pool[index]);
-        return bullet;
-    }
-
-    private void OnGetBullet(Bullet bullet)
-    {
-        bullet.gameObject.SetActive(true);
-    }
-
-    private void OnReleaseBullet(Bullet bullet)
-    {
-        bullet.gameObject.SetActive(false);
-    }
-
-    private void OnDestroyBullet(Bullet bullet)
-    {
-        Destroy(bullet.gameObject);
     }
 }

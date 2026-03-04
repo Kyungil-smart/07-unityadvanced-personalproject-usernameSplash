@@ -622,34 +622,6 @@ PrefabInstance:
       value: BulletManager
       objectReference: {fileID: 0}
     - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8174756084719307059, guid: 1162d612737204340b098de6297d02a2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}

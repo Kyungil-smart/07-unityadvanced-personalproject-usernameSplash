@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 531d80bde1e3a0442a0640e1a665b91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletManager
-  prefab:
+  _prefabs:
   - {fileID: 862259571164642962, guid: 932ba386387975d4ea119195bee617fe, type: 3}
   - {fileID: 987433719799077215, guid: 93a79f40ff0ecda4db8bd2c2c5f99c70, type: 3}
   - {fileID: 7453585488002550523, guid: e0852d18f5613f948a46e38154edff34, type: 3}
