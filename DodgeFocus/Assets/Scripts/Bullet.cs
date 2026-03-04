@@ -14,8 +14,10 @@ public class Bullet : MonoBehaviour
     IBulletSteering _steering;
     ObjectPool<Bullet> _pool;
 
-    public void Init(float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, Vector2 direction)
+    public void Init(Vector3 position, float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, Vector2 direction)
     {
+        transform.position = position;
+
         Velocity = velocity;
         Acceleration = acceleration;
         AngularVelocity = angularVelocity;
@@ -32,10 +34,14 @@ public class Bullet : MonoBehaviour
 
         ReflectCnt = 0;
         Dir = direction;
+
+        _steering = new ConstantSteering();
     }
 
-    public void Init(float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, Vector2 direction, IBulletSteering steering)
+    public void Init(Vector3 position, float velocity, float acceleration, float angularVelocity, bool canReflect, int maxReflectNum, Vector2 direction, IBulletSteering steering)
     {
+        transform.position = position;
+
         Velocity = velocity;
         Acceleration = acceleration;
         AngularVelocity = angularVelocity;
@@ -75,10 +81,13 @@ public class Bullet : MonoBehaviour
         Velocity = Velocity + Acceleration * dt;
         transform.position += (Vector3)(Dir * Velocity * dt);
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
+            Debug.Log("OnTrigger");
+
             if (CanReflect == false)
             {
                 return;
@@ -89,11 +98,19 @@ public class Bullet : MonoBehaviour
                 return;
             }
 
-            Vector2 normal = collision.contacts[0].normal;
+            Vector2 closest = collision.ClosestPoint(transform.position);
+            Vector2 normal = ((Vector2)transform.position - closest).normalized;
+
             Dir = Vector2.Reflect(Dir, normal);
             ReflectCnt++;
+
+            Debug.Log($"ReflectCnt : {ReflectCnt}");
         }
-        else if (collision.gameObject.layer == LayerMask.NameToLayer("Border"))
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Border"))
         {
             _pool.Release(this);
         }
