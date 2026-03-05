@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4175809749262225977}
   - component: {fileID: 2264296459448522291}
   - component: {fileID: -9123316569484092961}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BulletR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 987433719799077215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fbdb4a5d6539b54bb9c785e7eb54ab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2128fc2774ee42b469c58141870a6377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
 --- !u!58 &2264296459448522291

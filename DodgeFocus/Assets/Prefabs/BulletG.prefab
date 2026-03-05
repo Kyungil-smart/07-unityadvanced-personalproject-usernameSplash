@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3251391870397946485}
   - component: {fileID: 270269663461115927}
   - component: {fileID: -8151602010898311466}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BulletG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7261087031446180385}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fbdb4a5d6539b54bb9c785e7eb54ab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2128fc2774ee42b469c58141870a6377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
 --- !u!70 &270269663461115927

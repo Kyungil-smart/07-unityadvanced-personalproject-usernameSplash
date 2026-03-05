@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3357961604518018266}
   - component: {fileID: 2496665796919600444}
   - component: {fileID: 7825647358803327843}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BulletY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7453585488002550523}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fbdb4a5d6539b54bb9c785e7eb54ab1, type: 3}
+  m_Script: {fileID: 11500000, guid: 2128fc2774ee42b469c58141870a6377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
 --- !u!60 &2496665796919600444
