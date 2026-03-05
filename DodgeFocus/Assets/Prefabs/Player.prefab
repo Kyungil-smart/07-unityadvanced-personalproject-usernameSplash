@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5279355073817061211}
   - component: {fileID: 7137455887811264528}
   - component: {fileID: 7023805233675523076}
+  - component: {fileID: 8643235146531327948}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -300,3 +301,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   _moveInput: {x: 0, y: 0}
+--- !u!114 &8643235146531327948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8427719833939293192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5230312f39245b34387a85a4d22e9a69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLogic
+  _hp: 100
+  _score: 0

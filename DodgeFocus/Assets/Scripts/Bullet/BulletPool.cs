@@ -14,7 +14,7 @@ public class BulletPool
             OnGetBullet,
             OnReleaseBullet,
             OnDestroyBullet,
-            false, 100
+            false, 20
         );
     }
 
