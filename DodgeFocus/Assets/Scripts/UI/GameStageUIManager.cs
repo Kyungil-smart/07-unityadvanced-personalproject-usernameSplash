@@ -8,6 +8,7 @@ public class GameStageUIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
@@ -28,6 +29,7 @@ public class GameStageUIManager : MonoBehaviour
 
     void OnPlayerDead()
     {
+        Cursor.visible = true;
         _statusUI.gameObject.SetActive(false);
         _gameoverUI.gameObject.SetActive(true);
     }
