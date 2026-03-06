@@ -3,88 +3,126 @@ using UnityEngine.Pool;
 
 public struct BulletContext
 {
-    public Vector3 position;
-    public float velocity;
-    public float acceleration;
-    public float angularVelocity;
-    public bool canReflect;
-    public int maxReflectNum;
-    public float degree;
+    public Vector3 _position;
+    public float _velocity;
+    public float _acceleration;
+    public float _accelStartSecond;
+    public float _angularVelocity;
+    public float _angularVelocityInit;
+    public float _angularAcceleration;
+    public float _curveStartSecond;
+    public bool _canReflect;
+    public int _maxReflectNum;
+    public float _degree;
+    public IBulletSteering _steering;
+
+    public BulletContext(
+        Vector3 position, float velocity, float acceleration, float accelStartSecond,
+        float angularVelocityInit, float angularAcceleration, float curveStartSecond,
+        bool canReflect, int maxReflectNum, float degree
+    )
+    {
+        _position = position;
+        _velocity = velocity;
+        _acceleration = acceleration;
+        _accelStartSecond = accelStartSecond;
+        _angularVelocity = 0;
+        _angularVelocityInit = angularVelocityInit;
+        _angularAcceleration = angularAcceleration;
+        _curveStartSecond = curveStartSecond;
+        _canReflect = canReflect;
+        _maxReflectNum = maxReflectNum;
+        _degree = degree;
+        _steering = new ConstantSteering();
+    }
+
+    public BulletContext(
+        Vector3 position, float velocity, float acceleration, float accelStartSecond,
+        float angularVelocityInit, float angularAcceleration, float curveStartSecond,
+        bool canReflect, int maxReflectNum, float degree,
+        IBulletSteering steering
+    )
+    {
+        _position = position;
+        _velocity = velocity;
+        _acceleration = acceleration;
+        _accelStartSecond = accelStartSecond;
+        _angularVelocity = 0;
+        _angularVelocityInit = angularVelocityInit;
+        _angularAcceleration = angularAcceleration;
+        _curveStartSecond = curveStartSecond;
+        _canReflect = canReflect;
+        _maxReflectNum = maxReflectNum;
+        _degree = degree;
+        _steering = steering;
+    }
+
+    public BulletContext(
+        Vector3 position, float velocity, float acceleration, float accelStartSecond,
+        float angularVelocityInit, float angularAcceleration, float curveStartSecond,
+        bool canReflect, int maxReflectNum, Vector2 dir
+    )
+    {
+        _position = position;
+        _velocity = velocity;
+        _acceleration = acceleration;
+        _accelStartSecond = accelStartSecond;
+        _angularVelocity = 0;
+        _angularVelocityInit = angularVelocityInit;
+        _angularAcceleration = angularAcceleration;
+        _curveStartSecond = curveStartSecond;
+        _canReflect = canReflect;
+        _maxReflectNum = maxReflectNum;
+        _degree = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        _steering = new ConstantSteering();
+    }
+    public BulletContext(
+        Vector3 position, float velocity, float acceleration, float accelStartSecond,
+        float angularVelocityInit, float angularAcceleration, float curveStartSecond,
+        bool canReflect, int maxReflectNum, Vector2 dir,
+        IBulletSteering steering
+    )
+    {
+        _position = position;
+        _velocity = velocity;
+        _acceleration = acceleration;
+        _accelStartSecond = accelStartSecond;
+        _angularVelocity = 0;
+        _angularVelocityInit = angularVelocityInit;
+        _angularAcceleration = angularAcceleration;
+        _curveStartSecond = curveStartSecond;
+        _canReflect = canReflect;
+        _maxReflectNum = maxReflectNum;
+        _degree = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        _steering = steering;
+    }
+
 }
 
 public class Bullet : MonoBehaviour
 {
     private bool _isInitialized = false;
 
-    public float Velocity { get; private set; }
-    public float Acceleration { get; private set; }
-    public float AngularVelocity { get; private set; }
-    public bool CanReflect { get; private set; }
-    public int MaxReflectNum { get; private set; }
-    public int ReflectCnt { get; private set; }
+    private BulletContext _context;
+    public BulletContext Context => _context;
     public Vector2 Dir { get; private set; }
 
-    IBulletSteering _steering;
+    private int _reflectCnt = 0;
+    private float _elapsedTime = 0.0f;
+
     ObjectPool<Bullet> _pool;
 
     public void Init(BulletContext context)
     {
-        transform.position = context.position;
+        transform.position = context._position;
 
-        Velocity = context.velocity;
-        Acceleration = context.acceleration;
-        AngularVelocity = context.angularVelocity;
-        CanReflect = context.canReflect;
+        _context = context;
 
-        if (CanReflect)
-        {
-            MaxReflectNum = context.maxReflectNum;
-        }
-        else
-        {
-            MaxReflectNum = 0;
-        }
-
-        ReflectCnt = 0;
-
-        float rad = context.degree * Mathf.Deg2Rad;
+        float rad = context._degree * Mathf.Deg2Rad;
         Dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
         Dir = Dir.normalized;
 
         transform.up = Dir;
-
-        _steering = new ConstantSteering();
-
-        _isInitialized = true;
-    }
-
-    public void Init(BulletContext context, IBulletSteering steering)
-    {
-        transform.position = context.position;
-
-        Velocity = context.velocity;
-        Acceleration = context.acceleration;
-        AngularVelocity = context.angularVelocity;
-        CanReflect = context.canReflect;
-
-        if (CanReflect)
-        {
-            MaxReflectNum = context.maxReflectNum;
-        }
-        else
-        {
-            MaxReflectNum = 0;
-        }
-
-        ReflectCnt = 0;
-
-        float rad = context.degree * Mathf.Deg2Rad;
-        Dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-        Dir = Dir.normalized;
-
-        transform.rotation.SetLookRotation(Dir);
-
-        _steering = steering;
 
         _isInitialized = true;
     }
@@ -109,9 +147,26 @@ public class Bullet : MonoBehaviour
 
         float dt = Time.deltaTime;
 
-        Dir = _steering.GetNextDirection(Dir, this);
-        Velocity = Velocity + Acceleration * dt;
-        transform.position += (Vector3)(Dir * Velocity * dt);
+        Dir = _context._steering.GetNextDirection(Dir, this);
+        transform.up = Dir;
+
+        if (_elapsedTime >= _context._accelStartSecond)
+        {
+            _context._velocity = _context._velocity + _context._acceleration * dt;
+        }
+
+        if (_elapsedTime >= _context._curveStartSecond)
+        {
+            if (_context._angularVelocity == 0.0f)
+            {
+                _context._angularVelocity = _context._angularVelocityInit;
+            }
+            _context._angularVelocity += _context._angularAcceleration;
+        }
+
+        _elapsedTime += dt;
+
+        transform.position += (Vector3)(Dir * _context._velocity * dt);
     }
 
     private void OnDisable()
@@ -123,14 +178,12 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
         {
-            Debug.Log("OnTrigger");
-
-            if (CanReflect == false)
+            if (_context._canReflect == false)
             {
                 return;
             }
 
-            if (ReflectCnt >= MaxReflectNum)
+            if (_reflectCnt >= _context._maxReflectNum)
             {
                 return;
             }
@@ -139,9 +192,7 @@ public class Bullet : MonoBehaviour
             Vector2 normal = ((Vector2)transform.position - closest).normalized;
 
             Dir = Vector2.Reflect(Dir, normal);
-            ReflectCnt++;
-
-            Debug.Log($"ReflectCnt : {ReflectCnt}");
+            _reflectCnt++;
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Border"))
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 public enum PlayerState
 {
@@ -13,6 +14,7 @@ public class PlayerLogic : MonoBehaviour
     [SerializeField] int _score;
 
     float _timer;
+    bool _isInvincible = false;
 
     Animator _playerAnimator;
 
@@ -21,6 +23,8 @@ public class PlayerLogic : MonoBehaviour
     public PlayerState State { get; private set; }
 
     public event Action OnPlayerDeadUI;
+
+    SpriteRenderer playerRenderer;
 
     private void Awake()
     {
@@ -33,6 +37,8 @@ public class PlayerLogic : MonoBehaviour
         State = PlayerState.Alive;
 
         GameState.PlayerData = this;
+
+        playerRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -69,9 +75,28 @@ public class PlayerLogic : MonoBehaviour
             return;
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet") && _isInvincible == false)
         {
-            _hp -= 20;
+            _hp -= 5;
+            StartCoroutine(HandleInvincible());
         }
+    }
+
+    IEnumerator HandleInvincible()
+    {
+        _isInvincible = true;
+
+        float t = 1.0f;
+        while (t > 0)
+        {
+            t -= 0.1f;
+
+            playerRenderer.enabled = !playerRenderer.enabled;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        playerRenderer.enabled = true;
+        _isInvincible = false;
     }
 }
